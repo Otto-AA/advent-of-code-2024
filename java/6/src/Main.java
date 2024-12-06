@@ -85,7 +85,7 @@ public class Main {
     }
 
     private static boolean isStuckInLoop(Area area, Guard guard) {
-        var passedPoints = new HashSet<PointWithVector>();
+        var passedPoints = HashSet.<PointWithVector>newHashSet(5000);
 
         while (area.inRange(guard.location)) {
             passedPoints.add(new PointWithVector(guard.location, guard.direction));

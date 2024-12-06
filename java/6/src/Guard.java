@@ -12,19 +12,19 @@ public class Guard {
     // updates and returns new location
     public void step() {
         turnBeforeObstacles();
-        stepForward();
+        location = computeMove();
     }
 
     // turn right until all obstacles are dodged
     private void turnBeforeObstacles() {
-        var nextObstacle = area.findNextObstacle(location, direction);
-        while (nextObstacle != null && location.isAdjacent(nextObstacle)) {
+        var nextPoint = computeMove();
+        while (area.inRange(nextPoint) && area.isObstacle(nextPoint)) {
             direction = direction.turnRight();
-            nextObstacle = area.findNextObstacle(location, direction);
+            nextPoint = computeMove();
         }
     }
 
-    private void stepForward() {
-        location = location.add(direction);
+    private Point computeMove() {
+        return location.add(direction);
     }
 }
