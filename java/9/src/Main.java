@@ -47,7 +47,6 @@ public class Main {
         for (int i = 0; i < currentLastBlockIndex; i++) {
             var block = blocks.get(i);
             for (int j = 0; j < block.fileBlocks(); j++) {
-                System.out.printf("[%d]", i);
                 checkSum += (long) positionCounter * i;
                 positionCounter++;
             }
@@ -62,7 +61,6 @@ public class Main {
                 if (currentLastBlockIndex == i) {
                     break;
                 }
-                System.out.printf("(%d)", currentLastBlockIndex);
                 checkSum += (long) positionCounter * currentLastBlockIndex;
                 positionCounter++;
                 usedFromLastBlock++;
@@ -71,7 +69,6 @@ public class Main {
         }
 
         for (int j = 0; j < currentLastBlock.fileBlocks() - usedFromLastBlock; j++) {
-            System.out.printf("<%d>", currentLastBlockIndex);
             checkSum += (long) positionCounter * currentLastBlockIndex;
             positionCounter++;
         }
@@ -95,11 +92,9 @@ public class Main {
         for (int i = 0; i < blocks.size(); i++) {
             var block = blocks.get(i);
             if (usedFiles.contains(i)) {
-                System.out.print(".".repeat(block.fileBlocks()));
                 positionCounter += block.fileBlocks();
             } else {
                 for (int j = 0; j < block.fileBlocks(); j++) {
-                    System.out.printf("[%d]", i);
                     checkSum += (long) positionCounter * i;
                     positionCounter++;
                 }
@@ -117,14 +112,12 @@ public class Main {
                     freeSpace -= movedBlock.fileBlocks();
                     usedFiles.add(j);
                     for (int x = 0; x < movedBlock.fileBlocks(); x++) {
-                        System.out.printf("(%d)", j);
                         checkSum += (long) positionCounter * j;
                         positionCounter++;
                     }
                 }
             }
 
-            System.out.print(".".repeat(freeSpace));
             positionCounter += freeSpace;
         }
 
