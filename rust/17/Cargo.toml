@@ -1,0 +1,9 @@
+[package]
+name = "aoc-17"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.95"
+indicatif = "0.17.9"
+regex = "1.11.1"
