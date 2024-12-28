@@ -1,0 +1,8 @@
+[package]
+name = "aoc-21"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.95"
+proptest = "1.6.0"
