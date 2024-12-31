@@ -62,7 +62,7 @@ impl Warehouse {
         start: &'a Point,
         direction: &Direction,
     ) -> Option<(Point, &'a Field)> {
-        self.iter_direction(start, direction).skip(1).next()
+        self.iter_direction(start, direction).nth(1)
     }
 
     pub(crate) fn gps(&self) -> usize {
@@ -72,7 +72,7 @@ impl Warehouse {
             .sum()
     }
 
-    pub(crate) fn iter_fields<'a>(&'a self) -> impl Iterator<Item = (Point, &'a Field)> {
+    pub(crate) fn iter_fields(&self) -> impl Iterator<Item = (Point, &'_ Field)> {
         iter_points_in_rectangle(
             &Point { row: 0, col: 0 },
             &Point {
@@ -224,12 +224,6 @@ impl WideBoxSide {
                 },
             ),
         }
-    }
-}
-
-impl Default for Field {
-    fn default() -> Self {
-        Field::Empty
     }
 }
 

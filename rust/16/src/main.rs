@@ -102,7 +102,7 @@ fn calculate_turning_costs(
     next_direction: &Direction,
 ) -> usize {
     let current_direction = current_direction.unwrap_or(&Direction::Right);
-    return match (current_direction, next_direction) {
+    match (current_direction, next_direction) {
         (Direction::Up, Direction::Up) => 0,
         (Direction::Up, Direction::Right) => 1000,
         (Direction::Up, Direction::Down) => 2000,
@@ -119,5 +119,5 @@ fn calculate_turning_costs(
         (Direction::Left, Direction::Right) => 2000,
         (Direction::Left, Direction::Down) => 1000,
         (Direction::Left, Direction::Left) => 0,
-    };
+    }
 }

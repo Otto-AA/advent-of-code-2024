@@ -24,13 +24,13 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn parse_network<'a>(input: &'a str) -> Network<'a> {
+fn parse_network(input: &str) -> Network<'_> {
     input
         .lines()
         .map(|line| {
             let mut parts: Vec<&str> = line.split("-").collect();
             parts.sort();
-            (*parts.get(0).unwrap(), *parts.get(1).unwrap())
+            (parts[0], parts[1])
         })
         .collect()
 }

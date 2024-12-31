@@ -59,8 +59,8 @@ pub fn part_two(path: &str, width: usize, height: usize) -> Result<Point> {
 pub fn shortest_path(memory_space: &MemorySpace, start: &Point, end: &Point) -> Option<Vec<Point>> {
     let result = astar(
         start,
-        |p| successors(&memory_space, p),
-        |p| heuristic(p, &end),
+        |p| successors(memory_space, p),
+        |p| heuristic(p, end),
         |p| p == end,
     );
     let (path, _) = result?;

@@ -98,13 +98,7 @@ impl<T: Hash + Eq + Clone> Keypad<T> {
 
         let possible_paths: Vec<Vec<Direction>> = paths
             .into_iter()
-            .map(|(a, b)| {
-                a.into_iter()
-                    .chain(b)
-                    .flatten()
-                    .map(|d| d.clone())
-                    .collect()
-            })
+            .map(|(a, b)| a.into_iter().chain(b).flatten().collect())
             .filter(|path| self.is_possible_path(path))
             .collect();
 

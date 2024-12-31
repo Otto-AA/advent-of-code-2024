@@ -5,7 +5,7 @@ use rayon::prelude::*;
 
 use crate::prices::{iter_price_changes, iter_prices};
 
-pub fn efficient_optimum_sequence(secrets: &Vec<u64>, max_price_changes: usize) -> ([i8; 4], u64) {
+pub fn efficient_optimum_sequence(secrets: &[u64], max_price_changes: usize) -> ([i8; 4], u64) {
     let bananas: Vec<HashMap<[i8; 4], u64>> = secrets
         .par_iter()
         .map(|secret| {
@@ -72,8 +72,8 @@ pub fn bruteforce_optimum_sequence(secrets: &Vec<u64>, max_price_changes: usize)
 
 #[cfg(test)]
 pub fn monkey_buy_bananas(
-    prices: &Vec<u64>,
-    price_changes: &Vec<i8>,
+    prices: &[u64],
+    price_changes: &[i8],
     price_change_sequence: [i8; 4],
 ) -> Option<u64> {
     let index = price_changes
@@ -99,8 +99,8 @@ mod tests {
             assert_eq!(
                 result,
                 monkey_buy_bananas(
-                    &iter_prices(seed).take(2001).collect(),
-                    &iter_price_changes(seed).take(2000).collect(),
+                    &iter_prices(seed).take(2001).collect::<Vec<_>>(),
+                    &iter_price_changes(seed).take(2000).collect::<Vec<_>>(),
                     seq
                 )
             );
@@ -136,11 +136,11 @@ mod tests {
         fn test_efficient_outputs_correct_number(secrets in proptest::collection::vec(0u64..2025, 1..4)) {
             let (seq, bananas_efficient) = efficient_optimum_sequence(&secrets, 2000);
 
-            let expected: u64 = secrets.iter().map(|s| monkey_buy_bananas(
-                    &iter_prices(*s).take(2001).collect(),
-                    &iter_price_changes(*s).take(2000).collect(),
+            let expected: u64 = secrets.iter().filter_map(|s| monkey_buy_bananas(
+                    &iter_prices(*s).take(2001).collect::<Vec<_>>(),
+                    &iter_price_changes(*s).take(2000).collect::<Vec<_>>(),
                     seq
-                )).flatten().sum();
+                )).sum();
             assert_eq!(expected, bananas_efficient);
         }
     }

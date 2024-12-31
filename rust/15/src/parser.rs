@@ -13,7 +13,7 @@ pub(crate) fn parse_file(path: &str) -> Result<Input, io::Error> {
     let mut reading_warehouse = true;
 
     for line in input.lines() {
-        if line == "" {
+        if line.is_empty() {
             reading_warehouse = false;
         } else if reading_warehouse {
             let row = line.chars().map(Field::from).collect();

@@ -3,43 +3,43 @@ use std::fmt::Display;
 use anyhow::{anyhow, Error, Result};
 
 pub enum Instruction {
-    ADV(Combo),
-    BXL(Literal),
-    BST(Combo),
-    JNZ(Literal),
-    BXC(Literal),
-    OUT(Combo),
-    BDV(Combo),
-    CDV(Combo),
+    Adv(Combo),
+    Bxl(Literal),
+    Bst(Combo),
+    Jnz(Literal),
+    Bxc(Literal),
+    Out(Combo),
+    Bdv(Combo),
+    Cdv(Combo),
 }
 
 impl Instruction {
     pub fn parse(opcode: u8, operand: u8) -> Result<Instruction, Error> {
         match opcode {
-            0 => Ok(Instruction::ADV(Combo::parse(operand)?)),
-            1 => Ok(Instruction::BXL(Literal::parse(operand)?)),
-            2 => Ok(Instruction::BST(Combo::parse(operand)?)),
-            3 => Ok(Instruction::JNZ(Literal::parse(operand)?)),
-            4 => Ok(Instruction::BXC(Literal::parse(operand)?)),
-            5 => Ok(Instruction::OUT(Combo::parse(operand)?)),
-            6 => Ok(Instruction::BDV(Combo::parse(operand)?)),
-            7 => Ok(Instruction::CDV(Combo::parse(operand)?)),
+            0 => Ok(Instruction::Adv(Combo::parse(operand)?)),
+            1 => Ok(Instruction::Bxl(Literal::parse(operand)?)),
+            2 => Ok(Instruction::Bst(Combo::parse(operand)?)),
+            3 => Ok(Instruction::Jnz(Literal::parse(operand)?)),
+            4 => Ok(Instruction::Bxc(Literal::parse(operand)?)),
+            5 => Ok(Instruction::Out(Combo::parse(operand)?)),
+            6 => Ok(Instruction::Bdv(Combo::parse(operand)?)),
+            7 => Ok(Instruction::Cdv(Combo::parse(operand)?)),
             _ => Err(anyhow!("Invalid opcode {}", opcode)),
         }
     }
 }
 
-impl Into<(u8, u8)> for &Instruction {
-    fn into(self) -> (u8, u8) {
-        match self {
-            Instruction::ADV(combo) => (0, combo.into()),
-            Instruction::BXL(literal) => (1, literal.into()),
-            Instruction::BST(combo) => (2, combo.into()),
-            Instruction::JNZ(literal) => (3, literal.into()),
-            Instruction::BXC(literal) => (4, literal.into()),
-            Instruction::OUT(combo) => (5, combo.into()),
-            Instruction::BDV(combo) => (6, combo.into()),
-            Instruction::CDV(combo) => (7, combo.into()),
+impl From<&Instruction> for (u8, u8) {
+    fn from(val: &Instruction) -> Self {
+        match val {
+            Instruction::Adv(combo) => (0, combo.into()),
+            Instruction::Bxl(literal) => (1, literal.into()),
+            Instruction::Bst(combo) => (2, combo.into()),
+            Instruction::Jnz(literal) => (3, literal.into()),
+            Instruction::Bxc(literal) => (4, literal.into()),
+            Instruction::Out(combo) => (5, combo.into()),
+            Instruction::Bdv(combo) => (6, combo.into()),
+            Instruction::Cdv(combo) => (7, combo.into()),
         }
     }
 }
@@ -47,14 +47,14 @@ impl Into<(u8, u8)> for &Instruction {
 impl Display for Instruction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Instruction::ADV(combo) => write!(f, "adv({})", combo),
-            Instruction::BXL(Literal(n)) => write!(f, "bxl({})", n),
-            Instruction::BST(combo) => write!(f, "bst({})", combo),
-            Instruction::JNZ(Literal(n)) => write!(f, "jnz({})", n),
-            Instruction::BXC(Literal(_)) => write!(f, "bxc()"),
-            Instruction::OUT(combo) => write!(f, "out({})", combo),
-            Instruction::BDV(combo) => write!(f, "bdv({})", combo),
-            Instruction::CDV(combo) => write!(f, "cdv({})", combo),
+            Instruction::Adv(combo) => write!(f, "adv({})", combo),
+            Instruction::Bxl(Literal(n)) => write!(f, "bxl({})", n),
+            Instruction::Bst(combo) => write!(f, "bst({})", combo),
+            Instruction::Jnz(Literal(n)) => write!(f, "jnz({})", n),
+            Instruction::Bxc(Literal(_)) => write!(f, "bxc()"),
+            Instruction::Out(combo) => write!(f, "out({})", combo),
+            Instruction::Bdv(combo) => write!(f, "bdv({})", combo),
+            Instruction::Cdv(combo) => write!(f, "cdv({})", combo),
         }
     }
 }
@@ -71,9 +71,9 @@ impl Literal {
     }
 }
 
-impl Into<u8> for &Literal {
-    fn into(self) -> u8 {
-        self.0
+impl From<&Literal> for u8 {
+    fn from(val: &Literal) -> Self {
+        val.0
     }
 }
 
@@ -94,9 +94,9 @@ impl Combo {
     }
 }
 
-impl Into<u8> for &Combo {
-    fn into(self) -> u8 {
-        match self {
+impl From<&Combo> for u8 {
+    fn from(val: &Combo) -> Self {
+        match val {
             Combo::Literal(n) => *n,
             Combo::Register(Register::A) => 4,
             Combo::Register(Register::B) => 5,

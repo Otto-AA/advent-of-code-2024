@@ -16,8 +16,7 @@ pub fn parse_input(path: &str) -> Result<(Program, State)> {
     let program = input
         .lines()
         .skip_while(|line| !line.is_empty())
-        .skip(1)
-        .next()
+        .nth(1)
         .context("Could not find program in input file")?;
     let instr_regex = Regex::new(r"(\d),(\d)").unwrap();
     for capture in instr_regex.captures_iter(program) {

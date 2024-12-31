@@ -18,7 +18,7 @@ pub fn load_input(path: &str) -> Result<Input> {
     let mut start = None;
     let mut end = None;
 
-    for (nth_row, line) in reader.lines().flatten().enumerate() {
+    for (nth_row, line) in reader.lines().map_while(Result::ok).enumerate() {
         let mut row = Vec::new();
         for (nth_col, c) in line.chars().enumerate() {
             row.push(match c {

@@ -12,7 +12,7 @@ fn main() {
     let args: Vec<String> = args().collect();
     let path: &Path = Path::new(args.get(1).expect("Please specify the input path"));
 
-    let (left, right) = read_input(&path).unwrap();
+    let (left, right) = read_input(path).unwrap();
 
     println!("Distance: {}", distance(&left, &right));
     println!("Similarity: {}", similarity(&left, &right));
@@ -25,22 +25,22 @@ fn read_input(path: &Path) -> Result<(Vec<i32>, Vec<i32>), Error> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
 
-    for line in reader.lines().flatten() {
+    for line in reader.lines().map_while(Result::ok) {
         let x: Vec<&str> = Regex::new(r"\s+").unwrap().split(&line).collect();
         if x.len() != 2 {
             println!("{:?}", x);
             panic!("Unexpected length: {}", x.len());
         }
-        left.push(x.get(0).unwrap().parse().unwrap());
-        right.push(x.get(1).unwrap().parse().unwrap());
+        left.push(x[0].parse().unwrap());
+        right.push(x[1].parse().unwrap());
     }
 
     Ok((left, right))
 }
 
-fn distance(left: &Vec<i32>, right: &Vec<i32>) -> i32 {
-    let mut left = left.clone();
-    let mut right = right.clone();
+fn distance(left: &[i32], right: &[i32]) -> i32 {
+    let mut left: Vec<i32> = left.to_vec();
+    let mut right: Vec<i32> = right.to_vec();
 
     left.sort();
     right.sort();
@@ -48,7 +48,7 @@ fn distance(left: &Vec<i32>, right: &Vec<i32>) -> i32 {
     zip(left, right).map(|(a, b)| (a - b).abs()).sum()
 }
 
-fn similarity(left: &Vec<i32>, right: &Vec<i32>) -> i32 {
+fn similarity(left: &[i32], right: &[i32]) -> i32 {
     let mut right_counts: HashMap<i32, i32> = HashMap::new();
 
     for id in right {

@@ -32,7 +32,7 @@ fn parse_track(path: &str) -> Result<Vec<Point>> {
     Ok(track)
 }
 
-fn map_to_index(track: &Vec<Point>) -> HashMap<&Point, usize> {
+fn map_to_index(track: &[Point]) -> HashMap<&Point, usize> {
     track.iter().enumerate().map(|(n, p)| (p, n)).collect()
 }
 
@@ -45,12 +45,11 @@ fn count_cheats(track: &HashMap<&Point, usize>, cheat_length: usize, min_saved: 
 
 fn cheats_savings(track: &HashMap<&Point, usize>, cheat_length: usize) -> Vec<usize> {
     let mut saved_counts = Vec::new();
-    for (&point, _) in track {
-        let cheats = cheatcodes(&track, point, cheat_length);
+    for &point in track.keys() {
+        let cheats = cheatcodes(track, point, cheat_length);
         let steps_saved: Vec<usize> = cheats
             .iter()
-            .map(|c| steps_saved(&track, c))
-            .flatten()
+            .filter_map(|c| steps_saved(track, c))
             .collect();
 
         saved_counts.extend(steps_saved);

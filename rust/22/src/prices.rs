@@ -5,7 +5,7 @@ pub fn iter_price_changes(start: u64) -> impl Iterator<Item = i8> {
         let change = to_price_change(*previous_price, price);
         *previous_price = price;
 
-        Some(i8::try_from(change).unwrap())
+        Some(change)
     })
 }
 

@@ -17,38 +17,37 @@ pub fn step(program: &Program, state: &mut State) -> Result<()> {
     Ok(())
 }
 
-fn execute_instruction(state: &mut State, instruction: &Instruction) -> () {
+fn execute_instruction(state: &mut State, instruction: &Instruction) {
     let mut jumped = false;
     match instruction {
-        Instruction::ADV(operand) => {
-            state.registers.a =
-                state.registers.a / 2_u64.pow(parse_operand(operand, state).try_into().unwrap());
+        Instruction::Adv(operand) => {
+            state.registers.a /= 2_u64.pow(parse_operand(operand, state).try_into().unwrap());
         }
-        Instruction::BXL(Literal(n)) => {
-            state.registers.b = state.registers.b ^ u64::from(*n);
+        Instruction::Bxl(Literal(n)) => {
+            state.registers.b ^= u64::from(*n);
         }
-        Instruction::BST(operand) => {
+        Instruction::Bst(operand) => {
             state.registers.b = parse_operand(operand, state) % 8;
         }
-        Instruction::JNZ(Literal(n)) => {
+        Instruction::Jnz(Literal(n)) => {
             if state.registers.a != 0 {
                 state.pc = usize::from(*n);
                 jumped = true;
             }
         }
-        Instruction::BXC(_) => {
-            state.registers.b = state.registers.b ^ state.registers.c;
+        Instruction::Bxc(_) => {
+            state.registers.b ^= state.registers.c;
         }
-        Instruction::OUT(operand) => {
+        Instruction::Out(operand) => {
             state
                 .out
                 .push((parse_operand(operand, state) % 8).try_into().unwrap());
         }
-        Instruction::BDV(operand) => {
+        Instruction::Bdv(operand) => {
             state.registers.b =
                 state.registers.a / 2_u64.pow(parse_operand(operand, state).try_into().unwrap());
         }
-        Instruction::CDV(operand) => {
+        Instruction::Cdv(operand) => {
             state.registers.c =
                 state.registers.a / 2_u64.pow(parse_operand(operand, state).try_into().unwrap());
         }

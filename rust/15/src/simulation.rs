@@ -9,7 +9,7 @@ pub(crate) struct Simulation<'a> {
 }
 
 impl Simulation<'_> {
-    pub(crate) fn move_robot(&mut self, direction: &Direction) -> () {
+    pub(crate) fn move_robot(&mut self, direction: &Direction) {
         if self.can_move_in_direction(direction, &self.robot_position) {
             self.move_in_direction(direction, &self.robot_position.clone());
         }
@@ -26,11 +26,11 @@ impl Simulation<'_> {
             Field::Box => self.can_move_in_direction(direction, &point),
             Field::WideBox(wide_box_side) => {
                 if matches!(direction, Direction::Left | Direction::Right) {
-                    return self.can_move_in_direction(direction, &point);
+                    self.can_move_in_direction(direction, &point)
                 } else {
                     let (_, other_side_point) = wide_box_side.other_side(&point);
-                    return self.can_move_in_direction(direction, &point)
-                        && self.can_move_in_direction(direction, &other_side_point);
+                    self.can_move_in_direction(direction, &point)
+                        && self.can_move_in_direction(direction, &other_side_point)
                 }
             }
             Field::Robot => panic!("Tried to move into a robot. Too many robots?"),

@@ -53,15 +53,14 @@ pub struct Point {
 
 impl Point {
     pub fn neighbours(&self) -> Vec<Point> {
-        vec![(1, 0), (0, 1), (-1, 0), (0, -1)]
+        [(1, 0), (0, 1), (-1, 0), (0, -1)]
             .iter()
-            .map(|(offset_row, offset_col)| {
+            .filter_map(|(offset_row, offset_col)| {
                 Some(Point {
                     row: self.row.checked_add_signed(*offset_row)?,
                     col: self.col.checked_add_signed(*offset_col)?,
                 })
             })
-            .flatten()
             .collect()
     }
 

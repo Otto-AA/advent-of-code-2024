@@ -28,14 +28,11 @@ fn parse_input(path: &str) -> Result<Vec<String>> {
 }
 
 fn code_number(code: &str) -> Result<usize> {
-    let digits: String = code
-        .chars()
-        .take_while(|c| ('0'..='9').contains(c))
-        .collect();
+    let digits: String = code.chars().take_while(|c| c.is_ascii_digit()).collect();
     Ok(digits.parse()?)
 }
 
-fn complexity_sum(codes: &Vec<String>, directional_keypads_count: usize, efficient: bool) -> usize {
+fn complexity_sum(codes: &[String], directional_keypads_count: usize, efficient: bool) -> usize {
     codes
         .iter()
         .map(|code| {
@@ -71,10 +68,10 @@ fn find_steps(
     let mut steps = vec![];
     for target in targets {
         let mut results = vec![];
-        for next_keypad_steps in numeric_keypad.paths_to(&target) {
+        for next_keypad_steps in numeric_keypad.paths_to(target) {
             let mut next_keypad_steps: Vec<DirectionalButton> = next_keypad_steps
                 .into_iter()
-                .map(|d| DirectionalButton::Arrow(d))
+                .map(DirectionalButton::Arrow)
                 .collect();
             next_keypad_steps.push(DirectionalButton::Activate);
             let final_keyboard_steps =
@@ -110,7 +107,7 @@ fn find_steps_recursive(
         for next_keypad_steps in keypads[0].paths_to(target) {
             let mut next_keypad_steps: Vec<DirectionalButton> = next_keypad_steps
                 .into_iter()
-                .map(|d| DirectionalButton::Arrow(d))
+                .map(DirectionalButton::Arrow)
                 .collect();
             next_keypad_steps.push(DirectionalButton::Activate);
             let final_keyboard_steps = find_steps_recursive(&mut keypads[1..], &next_keypad_steps);
@@ -149,10 +146,7 @@ fn precompute_solutions(directional_keypads_count: usize) -> Solutions {
         let mut next_solutions: Solutions = HashMap::new();
         for from in DirectionalButton::all_buttons() {
             for to in DirectionalButton::all_buttons() {
-                let solution_key = SolutionKey {
-                    from: from.clone(),
-                    to: to.clone(),
-                };
+                let solution_key = SolutionKey { from, to };
                 keypad.move_to(&from);
                 let mut min_costs = None;
                 for path in keypad.paths_to(&to) {
@@ -166,7 +160,7 @@ fn precompute_solutions(directional_keypads_count: usize) -> Solutions {
                             let mut total_costs = 0;
                             let mut current = Activate;
                             let mut steps: Vec<DirectionalButton> =
-                                path.into_iter().map(|direction| Arrow(direction)).collect();
+                                path.into_iter().map(Arrow).collect();
                             steps.push(Activate);
                             for target in steps {
                                 total_costs += previous_layer[&SolutionKey {
@@ -199,7 +193,7 @@ fn find_numeric_keypad_result(code: &str, solutions: &Solutions) -> usize {
         for path in numeric_keypad.paths_to(&target) {
             let mut sum = 0;
             let mut previous_position = DirectionalButton::Activate;
-            let mut steps: Vec<DirectionalButton> = path.into_iter().map(|d| Arrow(d)).collect();
+            let mut steps: Vec<DirectionalButton> = path.into_iter().map(Arrow).collect();
             steps.push(Activate);
             for target in steps.clone() {
                 let solution_key = SolutionKey {
@@ -236,7 +230,7 @@ mod tests {
         let mut keypad = directional_keypad();
         let targets = DirectionalButton::parse("<A")?;
 
-        let steps = find_steps_recursive(&mut vec![&mut keypad], &targets);
+        let steps = find_steps_recursive(&mut [&mut keypad], &targets);
 
         assert_eq!(targets, steps);
         assert_eq!(keypad.current(), targets.last().unwrap());
@@ -252,7 +246,7 @@ mod tests {
 
         let steps = find_steps(
             &mut numerical_keypad,
-            &mut vec![&mut directional_keypad],
+            &mut [&mut directional_keypad],
             &targets,
         );
 
@@ -434,7 +428,7 @@ mod tests {
     pub fn efficient_simple_button_press() {
         let code = "A";
 
-        let presses = code_complexity(&code, 3, true);
+        let presses = code_complexity(code, 3, true);
 
         assert_eq!(1, presses);
     }
@@ -443,7 +437,7 @@ mod tests {
     pub fn efficient_single_move() {
         let code = "0";
 
-        let presses = code_complexity(&code, 3, true);
+        let presses = code_complexity(code, 3, true);
 
         assert_eq!(18, presses);
     }
@@ -452,8 +446,8 @@ mod tests {
     pub fn efficient_multiple_moves() {
         let code = "0A";
 
-        let presses = code_complexity(&code, 3, true);
-        let expected = code_complexity(&code, 3, false);
+        let presses = code_complexity(code, 3, true);
+        let expected = code_complexity(code, 3, false);
 
         assert_eq!(expected, presses);
     }
@@ -462,8 +456,8 @@ mod tests {
     pub fn efficient_many_keypads() {
         let code = "0";
 
-        let presses = code_complexity(&code, 5, true);
-        let expected = code_complexity(&code, 5, false);
+        let presses = code_complexity(code, 5, true);
+        let expected = code_complexity(code, 5, false);
 
         assert_eq!(expected, presses);
     }

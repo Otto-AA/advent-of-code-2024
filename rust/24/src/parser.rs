@@ -17,10 +17,7 @@ pub fn parse_input(path: &str) -> Result<CircuitGraph> {
         .take_while(|line| !line.is_empty())
         .map(|line| {
             let parts: Vec<&str> = line.split(": ").collect();
-            (
-                parts.get(0).unwrap().to_string(),
-                parts.get(1).unwrap().parse::<u8>().unwrap() != 0,
-            )
+            (parts[0].to_string(), parts[1].parse::<u8>().unwrap() != 0)
         })
         .collect();
     let edges: Vec<(String, Gate, String)> = s
@@ -42,7 +39,7 @@ pub fn parse_input(path: &str) -> Result<CircuitGraph> {
     let mut name_to_index: HashMap<&String, NodeIndex> = HashMap::new();
     let nodes: HashSet<&String> = edges.iter().flat_map(|(from, _, to)| [from, to]).collect();
     for name in nodes {
-        let value = initial_assignment.get(name).map(|b| *b);
+        let value = initial_assignment.get(name).copied();
         let node = Node {
             name: name.clone(),
             value,

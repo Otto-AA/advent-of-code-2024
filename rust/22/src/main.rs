@@ -26,13 +26,13 @@ fn parse_input(path: &str) -> Result<Vec<u64>> {
         .collect()
 }
 
-fn part_one(numbers: &Vec<u64>) -> u64 {
+fn part_one(numbers: &[u64]) -> u64 {
     numbers
         .iter()
         .map(|&n| iter_secrets(n).nth(1999).unwrap())
         .sum()
 }
 
-fn part_two(numbers: &Vec<u64>) -> ([i8; 4], u64) {
+fn part_two(numbers: &[u64]) -> ([i8; 4], u64) {
     efficient_optimum_sequence(numbers, 2000)
 }

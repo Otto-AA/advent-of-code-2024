@@ -28,7 +28,7 @@ fn part_one(path: &str) -> usize {
     println!("{}", warehouse);
     println!("{:?}", input.moves);
 
-    assert_eq!(true, matches!(warehouse[&robot_start], Field::Robot));
+    assert!(matches!(warehouse[&robot_start], Field::Robot));
 
     let mut simulation = Simulation {
         warehouse: &mut warehouse,
@@ -57,7 +57,7 @@ fn part_two(path: &str) -> usize {
     println!("{}", warehouse);
     println!("{:?}", input.moves);
 
-    assert_eq!(true, matches!(warehouse[&robot_start], Field::Robot));
+    assert!(matches!(warehouse[&robot_start], Field::Robot));
 
     let mut simulation = Simulation {
         warehouse: &mut warehouse,

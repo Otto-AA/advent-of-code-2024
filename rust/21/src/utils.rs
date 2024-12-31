@@ -9,7 +9,7 @@ pub enum Direction {
 }
 
 impl Direction {
-    pub fn to_offset(&self) -> Offset {
+    pub fn to_offset(self) -> Offset {
         match self {
             Direction::Up => Offset { row: -1, col: 0 },
             Direction::Right => Offset { row: 0, col: 1 },

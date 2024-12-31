@@ -85,7 +85,7 @@ fn get_result(graph: &CircuitGraph) -> u64 {
             false => "0".to_string(),
         })
         .collect();
-    u64::from_str_radix(&outputs, 2).expect(&format!("Can convert <{outputs}> to u64"))
+    u64::from_str_radix(&outputs, 2).unwrap_or_else(|_| panic!("Can convert <{outputs}> to u64"))
 }
 
 fn part_two(graph: &mut CircuitGraph) {
@@ -127,7 +127,7 @@ fn part_two(graph: &mut CircuitGraph) {
             .next()
             .unwrap()
             .weight();
-        if !matches!(in_gate, Gate::XOR) {
+        if !matches!(in_gate, Gate::Xor) {
             // SWAP: z07<->nqk
             // SWAP: z32<->srn
             println!("Invalid: Output z{n:02} has as gate {in_gate:?}");
@@ -144,15 +144,16 @@ fn part_two(graph: &mut CircuitGraph) {
         let outgoing: Vec<EdgeReference<'_, Gate>> =
             graph.edges_directed(index, Outgoing).collect();
         // Carry bits (or last z45)
-        if outgoing.len() == 1 && matches!(outgoing[0].weight(), Gate::OR) {
-            if incoming.len() != 2 || !matches!(incoming[0].weight(), Gate::AND) {
-                // SWAP : fgt<->pcp
-                println!(
-                    "Suspicious carry bit: {name} ({} in, {} out)",
-                    incoming.len(),
-                    outgoing.len()
-                );
-            }
+        if outgoing.len() == 1
+            && matches!(outgoing[0].weight(), Gate::Or)
+            && (incoming.len() != 2 || !matches!(incoming[0].weight(), Gate::And))
+        {
+            // SWAP : fgt<->pcp
+            println!(
+                "Suspicious carry bit: {name} ({} in, {} out)",
+                incoming.len(),
+                outgoing.len()
+            );
         }
     }
     println!("{}", graph.node_indices().len());

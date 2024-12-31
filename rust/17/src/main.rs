@@ -71,7 +71,7 @@ fn part_two(path: &str) -> Result<u64> {
     println!("Program: {}", program);
     let expected_out: Vec<u8> = program
         .iter_instructions()
-        .map(|instr| <&Instruction as Into<(u8, u8)>>::into(instr))
+        .map(<&Instruction as Into<(u8, u8)>>::into)
         .fold(Vec::new(), |mut vec, (opcode, operand)| {
             vec.push(opcode);
             vec.push(operand);

@@ -15,7 +15,7 @@ impl Program {
         self.instructions.get(pc / 2)
     }
 
-    pub fn iter_instructions<'a>(&'a self) -> impl Iterator<Item = &'a Instruction> {
+    pub fn iter_instructions(&self) -> impl Iterator<Item = &'_ Instruction> {
         self.instructions.iter()
     }
 

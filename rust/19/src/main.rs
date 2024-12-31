@@ -32,7 +32,7 @@ fn parse_input(path: &str) -> Result<(Vec<String>, Vec<String>)> {
     Ok((towels, designs))
 }
 
-fn is_composable(towels: &Vec<String>, design: &str) -> bool {
+fn is_composable(towels: &[String], design: &str) -> bool {
     let mut known_composabilities = towels.iter().map(|s| (s.clone(), true)).collect();
     is_composable_rec(&mut known_composabilities, design)
 }
@@ -94,8 +94,8 @@ mod tests {
 
     #[test]
     fn test_is_composable() {
-        let towels = vec!["abc".to_string(), "def".to_string()];
-        let designs = vec![
+        let towels = ["abc".to_string(), "def".to_string()];
+        let designs = [
             "abcdef".to_string(),
             "abcd".to_string(),
             "def".to_string(),
